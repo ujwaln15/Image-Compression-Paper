@@ -2,10 +2,13 @@ import os
 import argparse
 
 import numpy as np
-from scipy.misc import imread, imresize, imsave
+import cv2
 
 import torch
 from torch.autograd import Variable
+
+import warnings
+warnings.filterwarnings("ignore")
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--model', required=True, type=str, help='path to model')
@@ -72,7 +75,7 @@ for iters in range(min(args.iterations, codes.size(0))):
         codes[iters], decoder_h_1, decoder_h_2, decoder_h_3, decoder_h_4)
     image = image + output.data.cpu()
 
-    imsave(
+    cv2.imwrite(
         os.path.join(args.output, '{:02d}.png'.format(iters)),
-        np.squeeze(image.numpy().clip(0, 1) * 255.0).astype(np.uint8)
-        .transpose(1, 2, 0))
+        cv2.cvtColor(np.squeeze(image.numpy().clip(0, 1) * 255.0).astype(np.uint8)
+        .transpose(1, 2, 0),cv2.COLOR_RGB2BGR))
