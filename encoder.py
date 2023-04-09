@@ -1,10 +1,13 @@
 import argparse
 
 import numpy as np
-from scipy.misc import imread, imresize, imsave
+import cv2
 
 import torch
 from torch.autograd import Variable
+
+import warnings
+warnings.filterwarnings("ignore")
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
@@ -18,7 +21,7 @@ parser.add_argument(
     '--iterations', type=int, default=16, help='unroll iterations')
 args = parser.parse_args()
 
-image = imread(args.input, mode='RGB')
+image = cv2.cvtColor(cv2.imread(args.input),cv2.COLOR_BGR2RGB)
 image = torch.from_numpy(
     np.expand_dims(
         np.transpose(image.astype(np.float32) / 255.0, (2, 0, 1)), 0))
